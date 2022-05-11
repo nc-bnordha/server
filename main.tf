@@ -1,3 +1,12 @@
+locals {
+  machine_type_mapping = {
+    small  = "e2-micro"
+    medium = "e2-medium"
+    large  = "n2-standard-2"
+  }
+  machine_type = local.machine_type_mapping[var.machine_size]
+}
+
 resource "google_compute_address" "static" {
   count = var.static_ip ? 1 : 0
   name  = "${var.name}-ipv4-address"
@@ -6,7 +15,7 @@ resource "google_compute_address" "static" {
 resource "google_compute_instance" "this" {
   name         = var.name
   zone         = var.zone
-  machine_type = var.machine_type
+  machine_type = local.machine_type
 
   boot_disk {
     initialize_params {
